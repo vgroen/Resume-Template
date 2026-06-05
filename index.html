@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"
+  />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>CV</title>
+
+  <script src="./example.js"></script>
+</head>
+
+<body lang="en">
+  <div class="container">
+    <section class="person">
+      <div class="text">
+        <div class="name"></div>
+        <div class="marker contact"></div>
+        <div class="marker social"></div>
+        <div class="description"></div>
+      </div>
+      <!-- TEMPLATE -->
+      <!-- <div class="portrait"> -->
+      <!--   <div class="image"> -->
+      <!--     <img src="..." /> -->
+      <!--   </div> -->
+      <!-- </div> -->
+    </section>
+
+    <section class="main">
+      <section class="block education">
+        <div class="block-header"></div>
+        <div class="block-content timeline">
+          <!-- TEMPLATE -->
+          <!-- <div class="timeline-entry"> -->
+          <!--   <div class="date-range [short-bar]"> -->
+          <!--     <span>...</span> -->
+          <!--     <span>...</span> -->
+          <!--   </div> -->
+          <!--   <div class="decorator"></div> -->
+          <!--   <div class="details"> -->
+          <!--     <div class="header"> -->
+          <!--       <span class="title [bsc|msc]">...</span> -->
+          <!--       <span class="institution">...</span> -->
+          <!--       <span class="location">...</span> -->
+          <!--       <span class="notes">...</span> -->
+          <!--     </div> -->
+          <!--     <div class="description"> -->
+          <!--       ... -->
+          <!--     </div> -->
+          <!--   </div> -->
+          <!-- </div> -->
+        </div>
+      </section>
+
+      <section class="block experience">
+        <div class="block-header"></div>
+        <div class="block-content timeline">
+        </div>
+      </section>
+
+      <section class="footer">
+        <section class="block projects">
+          <div class="block-header"></div>
+          <div class="block-content itemize">
+            <!-- TEMPLATE -->
+            <!-- <div class="item"> -->
+            <!--   <div class="decorator"></div> -->
+            <!--   <span class="title">...</span> -->
+            <!--   <span class="notes">...</span> -->
+            <!--   <span class="description"> -->
+            <!--     ... -->
+            <!--   </span> -->
+            <!-- </div> -->
+          </div>
+        </section>
+
+
+        <section class="block skills">
+          <div class="block-header"></div>
+          <div class="block-content itemize">
+         </div>
+        </section>
+      </section>
+    </section>
+  </div>
+
+  <script>
+    const maybe_elem = (cond, elem) => cond ? [elem ?? cond] : [];
+    const surround = (elem, classes = []) => x => x ? `<${elem} class="${classes.join(" ")}">${x}</${elem}>` : "";
+
+    document.title = `${LANG["personal"]["name"]} - CV`;
+
+    LANG["personal"]["name"] && (document.querySelector(".person .name").innerHTML = LANG["personal"]["name"]);
+    LANG["personal"]["description"] && (document.querySelector(".person .description").innerHTML = LANG["personal"]["description"]);
+
+    document
+      .querySelector(".person .contact")
+      .insertAdjacentHTML(
+        "beforebegin",
+        surround("div", [ "contact" ])(
+          ((str = LANG["personal"]["phone"]) => 
+            str && `
+            <i class="fa fa-phone"></i>
+            <a target="_blank" href="tel:${str.replace(/\s/g, "")}">${str}</a>
+        `)())
+      );
+
+    document
+      .querySelector(".person .contact")
+      .insertAdjacentHTML(
+        "beforebegin",
+        surround("div", [ "contact" ])(
+          ((str = LANG["personal"]["mail"]) => 
+            str && `
+            <i class="fa fa-envelope"></i>
+            <a target="_blank" href="mailto:${str}">${str}</a>
+        `)())
+      );
+
+    document
+      .querySelector(".person .social")
+      .insertAdjacentHTML(
+        "beforebegin",
+        surround("div", [ "social" ])(
+          ((str = LANG["personal"]["github"]) => 
+            str && `
+            <i class="fa-brands fa-github"></i>
+            <a target="_blank" href="${str}">GitHub</a>
+        `)())
+      );
+
+    document
+      .querySelector(".person .social")
+      .insertAdjacentHTML(
+        "beforebegin",
+        surround("div", [ "social" ])(
+          ((str = LANG["personal"]["linkedin"]) => 
+            str && `
+            <i class="fa-brands fa-linkedin"></i>
+            <a target="_blank" href="${str}">LinkedIn</a>
+        `)())
+      );
+
+    document
+      .querySelector(".person .text")
+      .insertAdjacentHTML(
+        "afterend",
+        surround("div", [ "portrait" ])(
+          ((obj = LANG["personal"]["portrait"]) => 
+            obj && `
+            <div class="image">
+            <img src="${obj["src"]}" style="transform: translate(-100%, -100%) translate(${obj["position"]?.x ?? "50%"}, ${obj["position"]?.y ?? "50%"}) scale(${obj["scale"] ?? "100%"})" />
+            </div>
+        `)())
+      );
+
+    Object.entries(LANG["headers"]).map(([key, value]) => {
+      document
+        .querySelector(`.block.${key} .block-header`)
+        .insertAdjacentHTML(
+          "beforeend",
+          surround("span", [ "title" ])(value)
+        );
+    });
+
+    LANG["education"].map(entry => {
+      document
+        .querySelector(".education .timeline")
+        .insertAdjacentHTML(
+          "beforeend",
+          `
+          <div class="timeline-entry">
+            ${surround("div", [ "date-range", ...maybe_elem(entry["short-bar"], "short-bar")])(
+              entry["date-range"].map(surround("span")).join("")
+            )}
+            <div class="decorator"></div>
+            <div class="details">
+              <div class="header">
+                ${surround("span", [ "title", ...maybe_elem(entry["grade"]) ])(entry["title"])}
+                ${surround("span", [ "institution" ])(entry["institution"])}
+                ${surround("span", [ "location" ])(entry["location"])}
+                ${surround("span", [ "notes" ])(entry["notes"])}
+              </div>
+              <div class="description">
+                ${entry["description"] ?? ""}
+              </div>
+            </div>
+          </div>
+          `
+        )
+    });
+
+    LANG["experience"].map(entry => {
+      document
+        .querySelector(".experience .timeline")
+        .insertAdjacentHTML(
+          "beforeend",
+          `
+          <div class="timeline-entry">
+            ${surround("div", [ "date-range", ...maybe_elem(entry["short-bar"], "short-bar")])(
+              entry["date-range"].map(surround("span")).join("")
+            )}
+            <div class="decorator"></div>
+            <div class="details">
+              <div class="header">
+                ${surround("span", [ "title" ])(entry["title"])}
+                ${surround("span", [ "institution" ])(entry["institution"])}
+                ${surround("span", [ "location" ])(entry["location"])}
+                ${surround("span", [ "notes" ])(entry["notes"])}
+              </div>
+              <div class="description">
+                ${entry["description"] ?? ""}
+              </div>
+            </div>
+          </div>
+          `
+        )
+    });
+
+    LANG["projects"].map(entry => {
+      document
+        .querySelector(".projects .itemize")
+        .insertAdjacentHTML(
+          "beforeend",
+          `
+          <div class="item">
+            <div class="decorator"></div>
+              ${surround("span", [ "title" ])(entry["title"])}
+              ${surround("span", [ "notes" ])(entry["notes"])}
+              ${surround("span", [ "description" ])(entry["description"])}
+            </div>
+          </div>
+          `
+        )
+    });
+
+    LANG["skills"].map(entry => {
+      document
+        .querySelector(".skills .itemize")
+        .insertAdjacentHTML(
+          "beforeend",
+          `
+          <div class="item">
+            <div class="decorator"></div>
+              ${surround("span", [ "title" ])(entry["title"])}
+              ${surround("span", [ "notes" ])(entry["notes"])}
+              ${surround("span", [ "description" ])(entry["description"])}
+              ${
+                surround("ul", [ "items" ])(
+                  entry["items"]?.map(item => `<li>${item}</li>`)?.join("\n")
+                )
+              }
+            </div>
+          </div>
+          `
+        )
+    });
+  </script>
+</body>
+</html>
+
