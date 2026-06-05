@@ -1,7 +1,7 @@
 # Multilingual Resume Template
 
 A lightweight, framework-free, one-page resume generator built with HTML, CSS
-(SCSS), and vanilla JavaScript. 
+(SCSS), and vanilla JavaScript ([demo](https://vgroen.github.io/Resume-Template/)).
 
 I created this template to easily generate and maintain a clean, professional
 resume in multiple languages without having to deal with heavy dependencies,
